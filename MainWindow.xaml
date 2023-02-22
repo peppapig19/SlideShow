@@ -1,0 +1,89 @@
+﻿<Window x:Class="SlideShow.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Height="500" Width="700">
+
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush SpreadMethod="Reflect" StartPoint="0,0" EndPoint="0,0.5">
+                <GradientStop Color="NavajoWhite" Offset="0" />
+                <GradientStop Color="White" Offset="1" />
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+
+        <DockPanel Grid.Row="0" Grid.Column="0">
+            <Button Name="add_button" DockPanel.Dock="Bottom" Content="Add" Click="add_button_Click" />
+            <ListBox Name="names_listBox" Background="Transparent" SelectionChanged="names_listBox_SelectionChanged">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Filename}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </DockPanel>
+
+        <Image Name="big_image" Grid.Row="0" Grid.Column="1" />
+
+        <ListBox Name="slideshow_listBox" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ScrollViewer.VerticalScrollBarVisibility="Disabled" SelectionChanged="slideshow_listBox_SelectionChanged">
+            <ListBox.Template>
+                <ControlTemplate>
+                    <Grid>
+                        <ScrollViewer>
+                            <ItemsPresenter />
+                        </ScrollViewer>
+                    </Grid>
+                </ControlTemplate>
+            </ListBox.Template>
+
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Image Name="animated_image" Source="{Binding Image}" Height="100" Opacity="0.5" />
+
+                    <DataTemplate.Triggers>
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <EventTrigger.Actions>
+                                <BeginStoryboard>
+                                    <Storyboard TargetName="animated_image">
+                                        <DoubleAnimation Duration="0:0:0.3" Storyboard.TargetProperty="Height" From="100" To="150" />
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.5" To="1" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+
+                        <EventTrigger RoutedEvent="MouseLeave">
+                            <EventTrigger.Actions>
+                                <BeginStoryboard>
+                                    <Storyboard TargetName="animated_image">
+                                        <DoubleAnimation Duration="0:0:0.3" Storyboard.TargetProperty="Height" From="150" To="100" />
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0.5" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+
+                    </DataTemplate.Triggers>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+        </ListBox>
+    </Grid>
+</Window>
